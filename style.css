@@ -375,4 +375,77 @@ footer p {
     .email-box {
         width: 100%;
     }
+}/* JS INTERACTIONS */
+
+.menu-button {
+    display: none;
+    border: none;
+    background: transparent;
+    font-size: 24px;
+    color: #8e617c;
+    cursor: pointer;
 }
+
+.cart {
+    position: relative;
+}
+
+.cart-count {
+    position: absolute;
+    top: -10px;
+    right: -12px;
+    background: #c99ab5;
+    color: white;
+    font-size: 11px;
+    width: 19px;
+    height: 19px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reveal {
+    opacity: 0;
+    transform: translateY(25px);
+    transition: all 0.7s ease;
+}
+
+.reveal.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (max-width: 600px) {
+
+    .menu-button {
+        display: block;
+        order: 3;
+    }
+
+    nav {
+        position: relative;
+    }
+
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: white;
+        flex-direction: column;
+        gap: 0;
+        padding: 10px 0;
+        box-shadow: 0 10px 20px rgba(120, 80, 110, 0.08);
+    }
+
+    .nav-links.mobile-active {
+        display: flex;
+    }
+
+    .nav-links a {
+        padding: 14px 25px;
+        text-align: center;
+    }
+}p
