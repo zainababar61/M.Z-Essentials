@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>M.Z Essentials | Admin</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .admin-page {
+            min-height: 100vh;
+            padding: 50px 7%;
+            background: #fffafc;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            gap: 20px;
+        }
+
+        .admin-title h1 {
+            font-family: "Playfair Display", serif;
+            font-size: 42px;
+            margin-bottom: 8px;
+        }
+
+        .admin-title p {
+            color: #80757e;
+            font-size: 13px;
+        }
+
+        .admin-button {
+            border: none;
+            background: #b8799b;
+            color: white;
+            padding: 13px 22px;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+
+        .admin-card {
+            background: white;
+            border: 1px solid #eee2e9;
+            border-radius: 25px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 35px rgba(103, 75, 96, .07);
+        }
+
+        .admin-card h2 {
+            font-family: "Playfair Display", serif;
+            margin-bottom: 22px;
+        }
+
+        .admin-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .admin-form .full {
+            grid-column: 1 / -1;
+        }
+
+        .admin-form label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 7px;
+        }
+
+        .admin-form input,
+        .admin-form textarea,
+        .admin-form select {
+            width: 100%;
+            padding: 13px 15px;
+            border: 1px solid #e5d9e0;
+            border-radius: 13px;
+            outline: none;
+            background: #fffafd;
+        }
+
+        .admin-form textarea {
+            resize: vertical;
+        }
+
+        .product-management {
+            overflow-x: auto;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+
+        .admin-table th,
+        .admin-table td {
+            text-align: left;
+            padding: 15px 10px;
+            border-bottom: 1px solid #eee2e9;
+            font-size: 12px;
+        }
+
+        .admin-table th {
+            color: #9a6583;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 7px;
+        }
+
+        .edit-btn,
+        .delete-btn {
+            border: none;
+            padding: 7px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 10px;
+        }
+
+        .edit-btn {
+            background: #e9e1f6;
+            color: #715d82;
+        }
+
+        .delete-btn {
+            background: #f7dfe8;
+            color: #9a5f7d;
+        }
+
+        .back-home {
+            color: #9a6583;
+            font-size: 12px;
+        }
+
+        @media (max-width: 650px) {
+
+            .admin-page {
+                padding: 35px 5%;
+            }
+
+            .admin-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .admin-form {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-form .full {
+                grid-column: auto;
+            }
+
+            .admin-title h1 {
+                font-size: 34px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<section class="admin-page">
+
+    <div class="admin-header">
+
+        <div class="admin-title">
+
+            <a href="index.html" class="back-home">
+                ← Back to Store
+            </a>
+
+            <h1>M.Z Essentials</h1>
+
+            <p>
+                Product Management Dashboard
+            </p>
+
+        </div>
+
+        <button
+            class="admin-button"
+            onclick="document.getElementById('productForm').scrollIntoView({behavior:'smooth'})">
+
+            + Add Product
+
+        </button>
+
+    </div>
+
+
+    <!-- ADD PRODUCT -->
+
+    <div class="admin-card">
+
+        <h2>Add New Product</h2>
+
+        <form class="admin-form" id="productForm">
+
+            <div>
+
+                <label>Product Name</label>
+
+                <input
+                    type="text"
+                    id="productName"
+                    placeholder="e.g. Rose Hair Oil"
+                    required>
+
+            </div>
+
+
+            <div>
+
+                <label>Price (PKR)</label>
+
+                <input
+                    type="number"
+                    id="productPrice"
+                    placeholder="999"
+                    required>
+
+            </div>
+
+
+            <div>
+
+                <label>Category</label>
+
+                <select id="productCategory">
+
+                    <option value="Beauty">
+                        Beauty
+                    </option>
+
+                    <option value="Accessories">
+                        Accessories
+                    </option>
+
+                    <option value="Lifestyle">
+                        Lifestyle
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div>
+
+                <label>Product Image</label>
+
+                <input
+                    type="file"
+                    id="productImage"
+                    accept="image/*">
+
+            </div>
+
+
+            <div class="full">
+
+                <label>Description</label>
+
+                <textarea
+                    id="productDescription"
+                    rows="4"
+                    placeholder="Write product description..."
+                    required></textarea>
+
+            </div>
+
+
+            <div class="full">
+
+                <button
+                    type="submit"
+                    class="admin-button">
+
+                    Save Product
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- PRODUCT LIST -->
+
+    <div class="admin-card">
+
+        <h2>Products</h2>
+
+        <div class="product-management">
+
+            <table class="admin-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Product</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="adminProductList">
+
+                    <tr>
+
+                        <td>Hair Essentials</td>
+                        <td>Beauty</td>
+                        <td>PKR 999</td>
+
+                        <td>
+
+                            <div class="admin-actions">
+
+                                <button class="edit-btn">
+                                    Edit
+                                </button>
+
+                                <button class="delete-btn">
+                                    Delete
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>Beauty Essential</td>
+                        <td>Beauty</td>
+                        <td>PKR 799</td>
+
+                        <td>
+
+                            <div class="admin-actions">
+
+                                <button class="edit-btn">
+                                    Edit
+                                </button>
+
+                                <button class="delete-btn">
+                                    Delete
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- ORDERS -->
+
+    <div class="admin-card">
+
+        <h2>Recent Orders</h2>
+
+        <p style="color:#80757e;font-size:13px;">
+            Orders will appear here after we connect the store
+            to the database.
+        </p>
+
+    </div>
+
+</section>
+
+
+<script src="admin.js"></script>
+
+</body>
+</html>
