@@ -455,30 +455,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const whatsappButton =
         document.getElementById("whatsappButton");
+const whatsappButton =
+    document.getElementById("whatsappButton");
 
+if (whatsappButton) {
 
-    if (whatsappButton) {
+    whatsappButton.href =
+        "https://wa.me/923425522820";
 
-        whatsappButton.addEventListener(
-            "click",
-            function (event) {
+    whatsappButton.target = "_blank";
 
-                event.preventDefault();
+    whatsappButton.rel = "noopener noreferrer";
 
-                /*
-                 * WhatsApp number will be added later.
-                 * Example:
-                 * const whatsappNumber = "923001234567";
-                 */
-
-                alert(
-                    "WhatsApp contact will be available soon 💗"
-                );
-
-            }
-        );
-
-    }
+}
 
 
     /* =========================
