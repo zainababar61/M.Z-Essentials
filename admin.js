@@ -3,6 +3,8 @@ const productList = document.getElementById("adminProductList");
 
 let products = JSON.parse(localStorage.getItem("mzProducts")) || [];
 
+let editingIndex = -1;
+
 
 /* =========================
    SAVE PRODUCTS
@@ -22,12 +24,14 @@ function saveProducts() {
 
 function displayProducts() {
 
+    if (!productList) return;
+
     if (products.length === 0) {
 
         productList.innerHTML = `
             <tr>
-                <td colspan="4">
-                    No products added yet.
+                <td colspan="4" style="text-align:center; padding:25px;">
+                    No products added yet ✨
                 </td>
             </tr>
         `;
@@ -42,7 +46,7 @@ function displayProducts() {
             <tr>
 
                 <td>
-                    ${product.name}
+                    <strong>${product.name}</strong>
                 </td>
 
                 <td>
@@ -58,18 +62,20 @@ function displayProducts() {
                     <div class="admin-actions">
 
                         <button
+                            type="button"
                             class="edit-btn"
                             onclick="editProduct(${index})">
 
-                            Edit
+                            ✏️ Edit
 
                         </button>
 
                         <button
+                            type="button"
                             class="delete-btn"
                             onclick="deleteProduct(${index})">
 
-                            Delete
+                            🗑️ Delete
 
                         </button>
 
@@ -85,7 +91,7 @@ function displayProducts() {
 
 
 /* =========================
-   ADD PRODUCT
+   ADD / UPDATE PRODUCT
 ========================= */
 
 productForm.addEventListener("submit", function(event) {
@@ -117,24 +123,63 @@ productForm.addEventListener("submit", function(event) {
     }
 
 
-    const product = {
+    const updateProduct = function(imageData) {
 
-        id: Date.now(),
+        const productData = {
 
-        name: name,
+            id:
+                editingIndex >= 0
+                    ? products[editingIndex].id
+                    : Date.now(),
 
-        price: Number(price),
+            name: name,
 
-        category: category,
+            price: Number(price),
 
-        description: description,
+            category: category,
 
-        image: ""
+            description: description,
+
+            image:
+                imageData ||
+                (
+                    editingIndex >= 0
+                        ? products[editingIndex].image
+                        : ""
+                )
+
+        };
+
+
+        if (editingIndex >= 0) {
+
+            products[editingIndex] = productData;
+
+            editingIndex = -1;
+
+            alert("Product updated successfully ✨");
+
+        } else {
+
+            products.push(productData);
+
+            alert("Product added successfully ✨");
+
+        }
+
+
+        saveProducts();
+
+        displayProducts();
+
+        productForm.reset();
+
+        document.querySelector(
+            'button[type="submit"]'
+        ).textContent = "Save Product";
 
     };
 
-
-    /* Image preview/storage */
 
     if (
         imageInput.files &&
@@ -143,25 +188,11 @@ productForm.addEventListener("submit", function(event) {
 
         const reader = new FileReader();
 
-
         reader.onload = function() {
 
-            product.image = reader.result;
-
-            products.push(product);
-
-            saveProducts();
-
-            displayProducts();
-
-            productForm.reset();
-
-            alert(
-                "Product added successfully ✨"
-            );
+            updateProduct(reader.result);
 
         };
-
 
         reader.readAsDataURL(
             imageInput.files[0]
@@ -169,17 +200,7 @@ productForm.addEventListener("submit", function(event) {
 
     } else {
 
-        products.push(product);
-
-        saveProducts();
-
-        displayProducts();
-
-        productForm.reset();
-
-        alert(
-            "Product added successfully ✨"
-        );
+        updateProduct("");
 
     }
 
@@ -192,17 +213,15 @@ productForm.addEventListener("submit", function(event) {
 
 window.deleteProduct = function(index) {
 
-    const product = products[index];
-
-    if (!product) return;
+    if (!products[index]) return;
 
 
-    const confirmDelete = confirm(
-        `Delete "${product.name}"?`
+    const confirmed = confirm(
+        `Are you sure you want to delete "${products[index].name}"?`
     );
 
 
-    if (!confirmDelete) return;
+    if (!confirmed) return;
 
 
     products.splice(index, 1);
@@ -210,6 +229,9 @@ window.deleteProduct = function(index) {
     saveProducts();
 
     displayProducts();
+
+
+    alert("Product deleted successfully 🗑️");
 
 };
 
@@ -225,6 +247,9 @@ window.editProduct = function(index) {
     if (!product) return;
 
 
+    editingIndex = index;
+
+
     document.getElementById("productName").value =
         product.name;
 
@@ -238,18 +263,23 @@ window.editProduct = function(index) {
         product.description;
 
 
-    products.splice(index, 1);
+    const saveButton =
+        productForm.querySelector(
+            'button[type="submit"]'
+        );
 
-    saveProducts();
 
-    displayProducts();
+    if (saveButton) {
+
+        saveButton.textContent =
+            "Update Product";
+
+    }
 
 
-    document
-        .getElementById("productForm")
-        .scrollIntoView({
-            behavior: "smooth"
-        });
+    productForm.scrollIntoView({
+        behavior: "smooth"
+    });
 
 };
 
