@@ -1202,3 +1202,13 @@ footer {
         bottom: 14px;
     }
 }
+.logo-image {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    margin-bottom: 5px;
+}
+
+.logo {
+    gap: 0;
+}
