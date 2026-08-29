@@ -1,237 +1,533 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", function () {
+
+    let cart = [];
+
+    const cartButton = document.getElementById("cartButton");
+    const cartCount = document.getElementById("cartCount");
+    const cartSidebar = document.getElementById("cartSidebar");
+    const cartOverlay = document.getElementById("cartOverlay");
+    const closeCart = document.getElementById("closeCart");
+    const cartItems = document.getElementById("cartItems");
+    const cartTotal = document.getElementById("cartTotal");
+    const checkoutTotal = document.getElementById("checkoutTotal");
+    const checkoutOverlay = document.getElementById("checkoutOverlay");
+    const checkoutForm = document.getElementById("checkoutForm");
+
 
     /* =========================
-       MOBILE MENU
+       CART OPEN / CLOSE
     ========================= */
 
-    const nav = document.querySelector("nav");
-    const navLinks = document.querySelector(".nav-links");
+    function openCart() {
+        cartSidebar.classList.add("active");
+        cartOverlay.classList.add("active");
+        document.body.style.overflow = "hidden";
+    }
 
-    if (nav && navLinks) {
+    function closeCartPanel() {
+        cartSidebar.classList.remove("active");
+        cartOverlay.classList.remove("active");
+        document.body.style.overflow = "";
+    }
 
-        const menuButton = document.createElement("button");
+    if (cartButton) {
+        cartButton.addEventListener("click", openCart);
+    }
 
-        menuButton.className = "menu-button";
-        menuButton.innerHTML = "☰";
-        menuButton.setAttribute("aria-label", "Open menu");
+    if (closeCart) {
+        closeCart.addEventListener("click", closeCartPanel);
+    }
 
-        nav.insertBefore(menuButton, navLinks);
-
-        menuButton.addEventListener("click", () => {
-            navLinks.classList.toggle("mobile-active");
-
-            menuButton.innerHTML =
-                navLinks.classList.contains("mobile-active")
-                    ? "✕"
-                    : "☰";
-        });
-
-        navLinks.querySelectorAll("a").forEach(link => {
-            link.addEventListener("click", () => {
-                navLinks.classList.remove("mobile-active");
-                menuButton.innerHTML = "☰";
-            });
-        });
+    if (cartOverlay) {
+        cartOverlay.addEventListener("click", closeCartPanel);
     }
 
 
     /* =========================
-       SMOOTH SCROLLING
+       ADD TO CART
     ========================= */
 
-    document.querySelectorAll('a[href^="#"]').forEach(link => {
+    window.addToCart = function (productId) {
 
-        link.addEventListener("click", event => {
+        const product = document.querySelector(
+            `.product-card[data-id="${productId}"]`
+        );
 
-            const targetId = link.getAttribute("href");
+        if (!product) return;
 
-            if (!targetId || targetId === "#") return;
+        const name = product.dataset.name;
+        const price = Number(product.dataset.price);
 
-            const target = document.querySelector(targetId);
+        const existingProduct = cart.find(
+            item => item.id === productId
+        );
 
-            if (target) {
-                event.preventDefault();
+        if (existingProduct) {
 
-                target.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start"
-                });
-            }
-        });
+            existingProduct.quantity += 1;
 
-    });
+        } else {
+
+            cart.push({
+                id: productId,
+                name: name,
+                price: price,
+                quantity: 1
+            });
+
+        }
+
+        updateCart();
+
+        openCart();
+    };
 
 
     /* =========================
-       SHOP NOW BUTTON
+       UPDATE CART
     ========================= */
 
-    const shopButton = document.querySelector(".btn");
-    const productsSection = document.querySelector("#products");
+    function updateCart() {
 
-    if (shopButton && productsSection) {
+        if (!cartItems) return;
 
-        shopButton.addEventListener("click", event => {
+        let totalItems = 0;
+        let totalPrice = 0;
 
-            event.preventDefault();
+        cart.forEach(item => {
 
-            productsSection.scrollIntoView({
-                behavior: "smooth"
-            });
+            totalItems += item.quantity;
+
+            totalPrice +=
+                item.price * item.quantity;
 
         });
+
+
+        if (cartCount) {
+            cartCount.textContent = totalItems;
+        }
+
+
+        if (cartTotal) {
+            cartTotal.textContent =
+                `PKR ${totalPrice.toLocaleString()}`;
+        }
+
+
+        if (checkoutTotal) {
+            checkoutTotal.textContent =
+                `PKR ${totalPrice.toLocaleString()}`;
+        }
+
+
+        if (cart.length === 0) {
+
+            cartItems.innerHTML = `
+                <div class="empty-cart">
+                    <div class="empty-cart-icon">🛍️</div>
+                    <h3>Your bag is empty</h3>
+                    <p>Add something lovely to get started.</p>
+                </div>
+            `;
+
+            return;
+        }
+
+
+        cartItems.innerHTML = cart.map(item => {
+
+            return `
+                <div class="cart-item">
+
+                    <div class="cart-item-image">
+                        ✿
+                    </div>
+
+                    <div class="cart-item-info">
+
+                        <h4>${item.name}</h4>
+
+                        <p>
+                            PKR ${item.price.toLocaleString()}
+                        </p>
+
+                        <div class="quantity-controls">
+
+                            <button onclick="changeQuantity('${item.id}', -1)">
+                                −
+                            </button>
+
+                            <span>
+                                ${item.quantity}
+                            </span>
+
+                            <button onclick="changeQuantity('${item.id}', 1)">
+                                +
+                            </button>
+
+                            <button
+                                class="remove-item"
+                                onclick="removeFromCart('${item.id}')">
+
+                                Remove
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            `;
+
+        }).join("");
     }
 
 
     /* =========================
-       SHOPPING CART
+       CHANGE QUANTITY
     ========================= */
 
-    let cartCount = 0;
+    window.changeQuantity = function (productId, amount) {
 
-    const cartIcon = document.querySelector(".cart");
+        const item = cart.find(
+            product => product.id === productId
+        );
 
-    const productButtons =
-        document.querySelectorAll(".small-btn");
+        if (!item) return;
 
-    productButtons.forEach(button => {
+        item.quantity += amount;
 
-        button.textContent = "Add to Cart";
+        if (item.quantity <= 0) {
 
-        button.addEventListener("click", event => {
+            cart = cart.filter(
+                product => product.id !== productId
+            );
 
-            event.preventDefault();
+        }
 
-            cartCount++;
-
-            if (cartIcon) {
-                cartIcon.innerHTML = `🛍️ <span class="cart-count">${cartCount}</span>`;
-            }
-
-            button.textContent = "Added ✓";
-
-            setTimeout(() => {
-                button.textContent = "Add to Cart";
-            }, 1500);
-
-        });
-
-    });
+        updateCart();
+    };
 
 
     /* =========================
-       CART CLICK
+       REMOVE PRODUCT
     ========================= */
 
-    if (cartIcon) {
+    window.removeFromCart = function (productId) {
 
-        cartIcon.addEventListener("click", () => {
+        cart = cart.filter(
+            item => item.id !== productId
+        );
 
-            if (cartCount === 0) {
+        updateCart();
+    };
 
-                alert("Your cart is empty 🛍️");
+
+    /* =========================
+       CHECKOUT
+    ========================= */
+
+    window.openCheckout = function () {
+
+        if (cart.length === 0) {
+
+            alert(
+                "Your cart is empty. Please add a product first 💗"
+            );
+
+            return;
+        }
+
+        checkoutOverlay.classList.add("active");
+
+    };
+
+
+    window.closeCheckout = function () {
+
+        checkoutOverlay.classList.remove("active");
+
+    };
+
+
+    /* =========================
+       PLACE ORDER
+    ========================= */
+
+    if (checkoutForm) {
+
+        checkoutForm.addEventListener("submit", function (event) {
+
+            event.preventDefault();
+
+            if (cart.length === 0) {
+
+                alert("Your cart is empty 💗");
+                return;
+
+            }
+
+
+            const name =
+                document.getElementById("customerName").value.trim();
+
+            const phone =
+                document.getElementById("customerPhone").value.trim();
+
+            const address =
+                document.getElementById("customerAddress").value.trim();
+
+            const payment =
+                document.getElementById("paymentMethod").value;
+
+
+            if (!name || !phone || !address) {
+
+                alert(
+                    "Please complete all required details 💗"
+                );
+
+                return;
+
+            }
+
+
+            const order = {
+
+                orderId:
+                    "MZ-" +
+                    Date.now().toString().slice(-6),
+
+                customer: {
+
+                    name: name,
+                    phone: phone,
+                    address: address
+
+                },
+
+                paymentMethod: payment,
+
+                products: cart,
+
+                total: cart.reduce(
+                    (sum, item) =>
+                        sum + item.price * item.quantity,
+                    0
+                ),
+
+                date:
+                    new Date().toISOString()
+
+            };
+
+
+            console.log(
+                "M.Z Essentials Order:",
+                order
+            );
+
+
+            alert(
+                `Thank you ${name} 💗\n\n` +
+                `Your order ${order.orderId} has been received.\n\n` +
+                `We'll contact you shortly to confirm your order.`
+            );
+
+
+            cart = [];
+
+            updateCart();
+
+            checkoutForm.reset();
+
+            closeCheckout();
+
+            closeCartPanel();
+
+        });
+
+    }
+
+
+    /* =========================
+       CATEGORY FILTER
+    ========================= */
+
+    window.filterProducts = function (category) {
+
+        const products =
+            document.querySelectorAll(".product-card");
+
+        products.forEach(product => {
+
+            if (
+                product.dataset.category === category
+            ) {
+
+                product.style.display = "block";
 
             } else {
 
-                alert(
-                    `You have ${cartCount} item${cartCount > 1 ? "s" : ""} in your cart 💗`
-                );
+                product.style.display = "none";
 
             }
 
         });
 
-    }
+
+        document.getElementById("products")
+            .scrollIntoView({
+                behavior: "smooth"
+            });
+
+    };
+
+
+    window.showAllProducts = function () {
+
+        document
+            .querySelectorAll(".product-card")
+            .forEach(product => {
+
+                product.style.display = "block";
+
+            });
+
+    };
 
 
     /* =========================
        NEWSLETTER
     ========================= */
 
-    const emailInput =
-        document.querySelector(".email-box input");
+    window.subscribeEmail = function () {
 
-    const subscribeButton =
-        document.querySelector(".email-box button");
+        const input =
+            document.getElementById("emailInput");
 
-    if (emailInput && subscribeButton) {
+        if (!input) return;
 
-        subscribeButton.addEventListener("click", () => {
+        const email = input.value.trim();
 
-            const email = emailInput.value.trim();
 
-            if (email === "") {
-
-                alert("Please enter your email address 💌");
-                emailInput.focus();
-                return;
-
-            }
-
-            if (!email.includes("@") || !email.includes(".")) {
-
-                alert("Please enter a valid email address 💗");
-                emailInput.focus();
-                return;
-
-            }
+        if (!email) {
 
             alert(
-                "Thank you for joining the M.Z Essentials circle ✨"
+                "Please enter your email address 💌"
             );
 
-            emailInput.value = "";
+            input.focus();
 
-        });
+            return;
+        }
+
+
+        if (
+            !email.includes("@") ||
+            !email.includes(".")
+        ) {
+
+            alert(
+                "Please enter a valid email address 💗"
+            );
+
+            input.focus();
+
+            return;
+        }
+
+
+        alert(
+            "Welcome to the M.Z Circle ✨"
+        );
+
+        input.value = "";
+
+    };
+
+
+    /* =========================
+       WHATSAPP
+    ========================= */
+
+    const whatsappButton =
+        document.getElementById("whatsappButton");
+
+
+    if (whatsappButton) {
+
+        whatsappButton.addEventListener(
+            "click",
+            function (event) {
+
+                event.preventDefault();
+
+                /*
+                 * WhatsApp number will be added later.
+                 * Example:
+                 * const whatsappNumber = "923001234567";
+                 */
+
+                alert(
+                    "WhatsApp contact will be available soon 💗"
+                );
+
+            }
+        );
 
     }
 
 
     /* =========================
-       SCROLL REVEAL EFFECT
+       NAVIGATION
     ========================= */
 
-    const revealElements = document.querySelectorAll(
-        ".category, .product, .about-content"
-    );
+    document
+        .querySelectorAll('a[href^="#"]')
+        .forEach(link => {
 
-    const revealObserver = new IntersectionObserver(
-        entries => {
+            link.addEventListener(
+                "click",
+                function (event) {
 
-            entries.forEach(entry => {
+                    const targetId =
+                        this.getAttribute("href");
 
-                if (entry.isIntersecting) {
+                    if (
+                        !targetId ||
+                        targetId === "#"
+                    ) {
+                        return;
+                    }
 
-                    entry.target.classList.add("show");
+                    const target =
+                        document.querySelector(targetId);
 
-                    revealObserver.unobserve(entry.target);
+                    if (target) {
+
+                        event.preventDefault();
+
+                        target.scrollIntoView({
+                            behavior: "smooth"
+                        });
+
+                    }
 
                 }
+            );
 
-            });
-
-        },
-        {
-            threshold: 0.15
-        }
-    );
-
-
-    revealElements.forEach(element => {
-
-        element.classList.add("reveal");
-
-        revealObserver.observe(element);
-
-    });
+        });
 
 
     /* =========================
-       WELCOME MESSAGE
+       INITIALIZE
     ========================= */
 
-    console.log(
-        "✨ Welcome to M.Z Essentials"
-    );
+    updateCart();
 
 });
+
+    
