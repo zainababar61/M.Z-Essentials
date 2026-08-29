@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MZ Essentials</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #fffafd;
+            color: #3d3440;
+        }
+
+        /* NAVBAR */
+        nav {
+            width: 100%;
+            padding: 20px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            border-bottom: 1px solid #f1e5ec;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            color: #8e617c;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #4b4148;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #b47b9d;
+        }
+
+        .cart {
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* HERO */
+        .hero {
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 70px 8%;
+            background: linear-gradient(135deg, #fff8fc, #f7edf5);
+        }
+
+        .hero-text {
+            max-width: 520px;
+        }
+
+        .hero-text span {
+            color: #a36d8c;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .hero-text h1 {
+            font-size: 58px;
+            line-height: 1.1;
+            margin: 18px 0;
+            color: #3c3039;
+        }
+
+        .hero-text p {
+            font-size: 17px;
+            line-height: 1.7;
+            color: #756b73;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 30px;
+            background: #9c6b88;
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #79516a;
+            transform: translateY(-2px);
+        }
+
+        .hero-image {
+            width: 43%;
+            min-height: 420px;
+            border-radius: 30px;
+            background: linear-gradient(145deg, #ead5e2, #f9edf5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8f6b7f;
+            font-size: 20px;
+            text-align: center;
+            padding: 30px;
+        }
+
+        /* CATEGORIES */
+        .section {
+            padding: 80px 8%;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 45px;
+        }
+
+        .section-title h2 {
+            font-size: 35px;
+            color: #3f343c;
+            margin-bottom: 10px;
+        }
+
+        .section-title p {
+            color: #8a7d85;
+        }
+
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .category {
+            padding: 45px 25px;
+            text-align: center;
+            background: #fff;
+            border: 1px solid #f0e4eb;
+            border-radius: 22px;
+            transition: 0.3s;
+        }
+
+        .category:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 10px 30px rgba(130, 90, 115, 0.12);
+        }
+
+        .category .icon {
+            font-size: 45px;
+            margin-bottom: 18px;
+        }
+
+        .category h3 {
+            margin-bottom: 8px;
+            color: #594550;
+        }
+
+        .category p {
+            color: #8b7e86;
+            font-size: 14px;
+        }
+
+        /* PRODUCTS */
+        .products {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 22px;
+        }
+
+        .product {
+            background: #fff;
+            border: 1px solid #f0e5eb;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+
+        .product:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-image {
+            height: 220px;
+            background: #f7edf4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #a27a91;
+            font-size: 15px;
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-info h3 {
+            margin-bottom: 8px;
+            color: #4a3b44;
+        }
+
+        .price {
+            color: #9c6b88;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .small-btn {
+            display: inline-block;
+            padding: 9px 18px;
+            border: 1px solid #c99ab5;
+            border-radius: 20px;
+            color: #8f5f7b;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        /* ABOUT */
+        .about {
+            background: #f9f0f6;
+            text-align: center;
+        }
+
+        .about-content {
+            max-width: 750px;
+            margin: auto;
+        }
+
+        .about-content h2 {
+            font-size: 35px;
+            margin-bottom: 20px;
+        }
+
+        .about-content p {
+            line-height: 1.8;
+            color: #746770;
+        }
+
+        /* NEWSLETTER */
+        .newsletter {
+            text-align: center;
+            padding: 70px 20px;
+        }
+
+        .newsletter h2 {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .newsletter p {
+            color: #81747c;
+            margin-bottom: 25px;
+        }
+
+        .email-box {
+            display: flex;
+            max-width: 500px;
+            margin: auto;
+            border: 1px solid #decbd6;
+            border-radius: 30px;
+            overflow: hidden;
+            background: white;
+        }
+
+        .email-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 15px 20px;
+            font-size: 14px;
+        }
+
+        .email-box button {
+            border: none;
+            background: #9c6b88;
+            color: white;
+            padding: 0 25px;
+            cursor: pointer;
+        }
+
+        /* FOOTER */
+        footer {
+            background: #3f343c;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        footer p {
+            font-size: 14px;
+            color: #d9cdd4;
+        }
+
+        /* MOBILE */
+        @media (max-width: 900px) {
+
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                gap: 45px;
+            }
+
+            .hero-text h1 {
+                font-size: 43px;
+            }
+
+            .hero-image {
+                width: 100%;
+                min-height: 300px;
+            }
+
+            .products {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .categories {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            nav {
+                padding: 18px 5%;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 60px 5%;
+            }
+
+            .section {
+                padding: 60px 5%;
+            }
+
+            .products {
+                grid-template-columns: 1fr;
+            }
+
+            .email-box {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <div class="logo">M.Z Essentials</div>
+
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#categories">Categories</a>
+            <a href="#products">Products</a>
+            <a href="#about">About</a>
+        </div>
+
+        <div class="cart">🛍️</div>
+    </nav>
+
+
+    <!-- HERO -->
+    <section class="hero" id="home">
+
+        <div class="hero-text">
+            <span>Beautifully Curated For You</span>
+
+            <h1>Little Things.<br>Big Essentials.</h1>
+
+            <p>
+                Discover cute, useful and carefully selected essentials
+                made to add a little more beauty to your everyday life.
+            </p>
+
+            <a href="#products" class="btn">Shop Now</a>
+        </div>
+
+        <div class="hero-image">
+            Your Product Image Here
+        </div>
+
+    </section>
+
+
+    <!-- CATEGORIES -->
+    <section class="section" id="categories">
+
+        <div class="section-title">
+            <h2>Shop By Category</h2>
+            <p>Find your everyday favorites</p>
+        </div>
+
+        <div class="categories">
+
+            <div class="category">
+                <div class="icon">🎀</div>
+                <h3>Beauty</h3>
+                <p>Beauty essentials for your everyday routine.</p>
+            </div>
+
+            <div class="category">
+                <div class="icon">👜</div>
+                <h3>Accessories</h3>
+                <p>Cute and stylish pieces you'll love.</p>
+            </div>
+
+            <div class="category">
+                <div class="icon">✨</div>
+                <h3>Lifestyle</h3>
+                <p>Simple essentials to make life better.</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- PRODUCTS -->
+    <section class="section" id="products">
+
+        <div class="section-title">
+            <h2>Our Favorites</h2>
+            <p>Handpicked just for you</p>
+        </div>
+
+        <div class="products">
+
+            <div class="product">
+                <div class="product-image">
+                    Product Image
+                </div>
+
+                <div class="product-info">
+                    <h3>Hair Essentials</h3>
+                    <div class="price">PKR 999</div>
+                    <a href="#" class="small-btn">View Product</a>
+                </div>
+            </div>
+
+
+            <div class="product">
+                <div class="product-image">
+                    Product Image
+                </div>
+
+                <div class="product-info">
+                    <h3>Beauty Essential</h3>
+                    <div class="price">PKR 799</div>
+                    <a href="#" class="small-btn">View Product</a>
+                </div>
+            </div>
+
+
+            <div class="product">
+                <div class="product-image">
+                    Product Image
+                </div>
+
+                <div class="product-info">
+                    <h3>Cute Accessory</h3>
+                    <div class="price">PKR 599</div>
+                    <a href="#" class="small-btn">View Product</a>
+                </div>
+            </div>
+
+
+            <div class="product">
+                <div class="product-image">
+                    Product Image
+                </div>
+
+                <div class="product-info">
+                    <h3>Daily Essential</h3>
+                    <div class="price">PKR 899</div>
+                    <a href="#" class="small-btn">View Product</a>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ABOUT -->
+    <section class="section about" id="about">
+
+        <div class="about-content">
+
+            <h2>About M.Z Essentials</h2>
+
+            <p>
+                M.Z Essentials is a thoughtfully curated online store
+                bringing together beautiful, useful and affordable
+                everyday essentials. From beauty to accessories and
+                lifestyle finds, we choose pieces that make your
+                everyday moments a little more special.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- NEWSLETTER -->
+    <section class="newsletter">
+
+        <h2>Stay in the M.Z Circle ✨</h2>
+
+        <p>
+            Get updates about new arrivals, offers and cute finds.
+        </p>
+
+        <div class="email-box">
+            <input type="email" placeholder="Enter your email">
+            <button>Subscribe</button>
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer>
+
+        <p>
+            © 2026 M.Z Essentials. All Rights Reserved.
+        </p>
+
+    </footer>
+
+</body>
+</html>
