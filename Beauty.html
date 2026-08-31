@@ -1,1 +1,305 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beauty | M.Z Essentials</title>
+<meta name="description"
+    content="Shop beautiful and carefully curated beauty essentials from M.Z Essentials.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@500;600;700&display=swap"
+    rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<!-- NAVBAR -->
+<nav class="navbar">
+    <a href="index.html" class="logo">
+        <img
+            src="IMG_1601.png"
+            alt="M.Z Essentials Logo"
+            class="logo-image">
+    </a>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="index.html#categories">Categories</a>
+        <a href="index.html#products">Shop</a>
+        <a href="index.html#about">About</a>
+    </div>
+    <div class="nav-actions">
+        <button class="cart-button" id="cartButton">
+            🛍️
+            <span id="cartCount">0</span>
+        </button>
+    </div>
+</nav>
+<main>
+    <!-- CATEGORY HERO -->
+    <section class="category-page-hero">
+        <div>
+            <p class="eyebrow">
+                M.Z ESSENTIALS
+            </p>
+            <h1>
+                Beauty <em>Essentials</em>
+            </h1>
+            <p>
+                Discover beautiful everyday beauty essentials,
+                carefully selected just for you.
+            </p>
+            <a href="index.html#categories"
+                class="secondary-button">
+                ← Back to Categories
+            </a>
+        </div>
+    </section>
+    <!-- PRODUCTS -->
+    <section class="section products-section">
+        <div class="section-heading">
+            <p class="eyebrow">
+                BEAUTY COLLECTION
+            </p>
+            <h2>
+                Beauty Essentials
+            </h2>
+            <p>
+                Everything you need for your everyday beauty routine.
+            </p>
+        </div>
+        <div class="product-grid">
+            <!-- PRODUCT 1 -->
+            <article class="product-card"
+                data-id="1"
+                data-name="Hair Essentials"
+                data-price="999">
+                <div class="product-image">
+                    <span class="product-badge">
+                        Bestseller
+                    </span>
+                    <div class="product-placeholder">
+                        ✿
+                    </div>
+                </div>
+                <div class="product-details">
+                    <p class="product-category">
+                        Beauty
+                    </p>
+                    <h3>
+                        Hair Essentials
+                    </h3>
+                    <p class="product-description">
+                        Everyday essentials for beautiful,
+                        healthy-looking hair.
+                    </p>
+                    <div class="product-bottom">
+                        <strong>
+                            PKR 999
+                        </strong>
+                        <button
+                            class="add-button"
+                            onclick="addToCart(1)">
+                            Add +
+                        </button>
+                    </div>
+                </div>
+            </article>
+            <!-- PRODUCT 2 -->
+            <article class="product-card"
+                data-id="2"
+                data-name="Beauty Essential"
+                data-price="799">
+                <div class="product-image">
+                    <div class="product-placeholder">
+                        ♡
+                    </div>
+                </div>
+                <div class="product-details">
+                    <p class="product-category">
+                        Beauty
+                    </p>
+                    <h3>
+                        Beauty Essential
+                    </h3>
+                    <p class="product-description">
+                        A simple everyday beauty favorite.
+                    </p>
+                    <div class="product-bottom">
+                        <strong>
+                            PKR 799
+                        </strong>
+                        <button
+                            class="add-button"
+                            onclick="addToCart(2)">
+                            Add +
+                        </button>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+</main>
+<!-- CART -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+        <div>
+            <p class="eyebrow">
+                YOUR BAG
+            </p>
+            <h2>
+                Shopping Cart
+            </h2>
+        </div>
+        <button
+            class="close-cart"
+            id="closeCart">
+            ✕
+        </button>
+    </div>
+    <div class="cart-items" id="cartItems">
+        <div class="empty-cart">
+            <div class="empty-cart-icon">
+                🛍️
+            </div>
+            <h3>
+                Your bag is empty
+            </h3>
+            <p>
+                Add something lovely to get started.
+            </p>
+        </div>
+    </div>
+    <div class="cart-footer">
+        <div class="cart-total">
+            <span>
+                Subtotal
+            </span>
+            <strong id="cartTotal">
+                PKR 0
+            </strong>
+        </div>
+        <button
+            class="checkout-button"
+            onclick="openCheckout()">
+            Proceed to Checkout →
+        </button>
+    </div>
+</aside>
+<!-- CHECKOUT -->
+<div class="checkout-overlay"
+    id="checkoutOverlay">
+    <div class="checkout-modal">
+        <button
+            class="modal-close"
+            onclick="closeCheckout()">
+            ✕
+        </button>
+        <div class="checkout-heading">
+            <p class="eyebrow">
+                COMPLETE YOUR ORDER
+            </p>
+            <h2>
+                Checkout
+            </h2>
+            <p>
+                Enter your details and we'll prepare your order.
+            </p>
+        </div>
+        <form id="checkoutForm">
+            <div class="form-group">
+                <label>
+                    Full Name
+                </label>
+                <input
+                    type="text"
+                    id="customerName"
+                    placeholder="Your full name"
+                    required>
+            </div>
+            <div class="form-group">
+                <label>
+                    Phone Number
+                </label>
+                <input
+                    type="tel"
+                    id="customerPhone"
+                    placeholder="03XX XXXXXXX"
+                    required>
+            </div>
+            <div class="form-group">
+                <label>
+                    Delivery Address
+                </label>
+                <textarea
+                    id="customerAddress"
+                    rows="3"
+                    placeholder="Complete delivery address"
+                    required></textarea>
+            </div>
+            <div class="form-group">
+                <label>
+                    Payment Method
+                </label>
+                <select id="paymentMethod">
+                    <option value="cod">
+                        Cash on Delivery
+                    </option>
+                    <option value="bank">
+                        Bank Transfer
+                    </option>
+                    <option value="online">
+                        Online Payment
+                    </option>
+                </select>
+            </div>
+            <div class="checkout-summary">
+                <span>
+                    Order Total
+                </span>
+                <strong id="checkoutTotal">
+                    PKR 0
+                </strong>
+            </div>
+            <button
+                type="submit"
+                class="place-order-button">
+                Place Order
+            </button>
+            <p class="checkout-note">
+                🔒 Your information is kept private and secure.
+            </p>
+        </form>
+    </div>
+</div>
+<!-- WHATSAPP -->
+<a
+    href="https://wa.me/923425522820"
+    class="whatsapp-button"
+    target="_blank"
+    rel="noopener noreferrer">
+    <span>💬</span>
+    <div>
+        <small>
+            Chat With Us
+        </small>
+        <strong>
+            WhatsApp
+        </strong>
+    </div>
+</a>
+<!-- FOOTER -->
+<footer>
+    <div class="footer-bottom">
+        <p>
+            © 2026 M.Z Essentials. All rights reserved.
+        </p>
+        <p>
+            Made with ♡
+        </p>
+    </div>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>
