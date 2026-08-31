@@ -1237,3 +1237,14 @@ footer {
     line-height: 1;
     margin-top: -1px;
 }
+.logo-image {
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+    display: block;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    background: transparent;
+    border-radius: 50%;
+}
