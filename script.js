@@ -1,38 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
 
-    /* =========================
-       CART
-    ========================= */
-
-    let cart = [];
-
-    const cartButton = document.getElementById("cartButton");
-    const cartCount = document.getElementById("cartCount");
-    const cartSidebar = document.getElementById("cartSidebar");
-    const cartOverlay = document.getElementById("cartOverlay");
-    const closeCart = document.getElementById("closeCart");
-    const cartItems = document.getElementById("cartItems");
-    const cartTotal = document.getElementById("cartTotal");
-    const checkoutTotal = document.getElementById("checkoutTotal");
-
-    const checkoutOverlay =
-        document.getElementById("checkoutOverlay");
-
-    const checkoutForm =
-        document.getElementById("checkoutForm");
-
-
-    /* =========================
-       OPEN CART
-    ========================= */
-
-    function openCart() {
-
-        if (cartSidebar) {
-            cartSidebar.classList.add("active");
-        }
-
-        if (cartOverlay) {
             cartOverlay.classList.add("active");
         }
 
