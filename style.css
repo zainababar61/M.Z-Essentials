@@ -1212,3 +1212,28 @@ footer {
 .logo {
     gap: 0;
 }
+.logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    text-decoration: none;
+}
+
+.logo-image {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+    display: block;
+    margin: 0;
+}
+
+.logo span {
+    line-height: 1;
+}
+
+.logo small {
+    line-height: 1;
+    margin-top: -1px;
+}
