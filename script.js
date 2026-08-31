@@ -1,46 +1,45 @@
+document.addEventListener("DOMContentLoaded", function () {
 
-            cartOverlay.classList.add("active");
-        }
+    let cart = [];
+
+    const cartButton = document.getElementById("cartButton");
+    const cartCount = document.getElementById("cartCount");
+    const cartSidebar = document.getElementById("cartSidebar");
+    const cartOverlay = document.getElementById("cartOverlay");
+    const closeCart = document.getElementById("closeCart");
+    const cartItems = document.getElementById("cartItems");
+    const cartTotal = document.getElementById("cartTotal");
+    const checkoutTotal = document.getElementById("checkoutTotal");
+    const checkoutOverlay = document.getElementById("checkoutOverlay");
+    const checkoutForm = document.getElementById("checkoutForm");
+    const productGrid = document.getElementById("productGrid");
+
+
+    /* =========================
+       CART OPEN / CLOSE
+    ========================= */
+
+    function openCart() {
+
+        cartSidebar?.classList.add("active");
+        cartOverlay?.classList.add("active");
 
         document.body.style.overflow = "hidden";
     }
 
 
-    /* =========================
-       CLOSE CART
-    ========================= */
-
     function closeCartPanel() {
 
-        if (cartSidebar) {
-            cartSidebar.classList.remove("active");
-        }
-
-        if (cartOverlay) {
-            cartOverlay.classList.remove("active");
-        }
+        cartSidebar?.classList.remove("active");
+        cartOverlay?.classList.remove("active");
 
         document.body.style.overflow = "";
     }
 
 
-    if (cartButton) {
-        cartButton.addEventListener("click", openCart);
-    }
-
-    if (closeCart) {
-        closeCart.addEventListener(
-            "click",
-            closeCartPanel
-        );
-    }
-
-    if (cartOverlay) {
-        cartOverlay.addEventListener(
-            "click",
-            closeCartPanel
-        );
-    }
+    cartButton?.addEventListener("click", openCart);
+    closeCart?.addEventListener("click", closeCartPanel);
+    cartOverlay?.addEventListener("click", closeCartPanel);
 
 
     /* =========================
@@ -55,44 +54,33 @@
 
         if (!product) return;
 
-
-        const name =
-            product.dataset.name || "Product";
-
-        const price =
-            Number(product.dataset.price) || 0;
+        const name = product.dataset.name;
+        const price = Number(product.dataset.price);
 
 
-        const existingProduct = cart.find(
+        const existing = cart.find(
             item => String(item.id) === String(productId)
         );
 
 
-        if (existingProduct) {
+        if (existing) {
 
-            existingProduct.quantity += 1;
+            existing.quantity++;
 
         } else {
 
             cart.push({
-
                 id: String(productId),
-
                 name: name,
-
                 price: price,
-
                 quantity: 1
-
             });
 
         }
 
 
         updateCart();
-
         openCart();
-
     };
 
 
@@ -101,9 +89,6 @@
     ========================= */
 
     function updateCart() {
-
-        if (!cartItems) return;
-
 
         let totalItems = 0;
         let totalPrice = 0;
@@ -120,30 +105,24 @@
 
 
         if (cartCount) {
-
-            cartCount.textContent =
-                totalItems;
-
+            cartCount.textContent = totalItems;
         }
 
 
         if (cartTotal) {
-
             cartTotal.textContent =
                 `PKR ${totalPrice.toLocaleString()}`;
-
         }
 
 
         if (checkoutTotal) {
-
             checkoutTotal.textContent =
                 `PKR ${totalPrice.toLocaleString()}`;
-
         }
 
 
-        /* EMPTY CART */
+        if (!cartItems) return;
+
 
         if (cart.length === 0) {
 
@@ -171,72 +150,61 @@
         }
 
 
-        /* CART PRODUCTS */
+        cartItems.innerHTML = cart.map(item => `
 
-        cartItems.innerHTML = cart.map(item => {
+            <div class="cart-item">
 
-            return `
+                <div class="cart-item-image">
+                    ✿
+                </div>
 
-                <div class="cart-item">
+                <div class="cart-item-info">
 
-                    <div class="cart-item-image">
-                        ✿
-                    </div>
+                    <h4>
+                        ${item.name}
+                    </h4>
 
+                    <p>
+                        PKR ${item.price.toLocaleString()}
+                    </p>
 
-                    <div class="cart-item-info">
+                    <div class="quantity-controls">
 
-                        <h4>
-                            ${item.name}
-                        </h4>
+                        <button
+                            onclick="changeQuantity('${item.id}', -1)">
+                            −
+                        </button>
 
-                        <p>
-                            PKR ${item.price.toLocaleString()}
-                        </p>
+                        <span>
+                            ${item.quantity}
+                        </span>
 
+                        <button
+                            onclick="changeQuantity('${item.id}', 1)">
+                            +
+                        </button>
 
-                        <div class="quantity-controls">
+                        <button
+                            class="remove-item"
+                            onclick="removeFromCart('${item.id}')">
 
-                            <button
-                                onclick="changeQuantity('${item.id}', -1)">
-                                −
-                            </button>
+                            Remove
 
-
-                            <span>
-                                ${item.quantity}
-                            </span>
-
-
-                            <button
-                                onclick="changeQuantity('${item.id}', 1)">
-                                +
-                            </button>
-
-
-                            <button
-                                class="remove-item"
-                                onclick="removeFromCart('${item.id}')">
-
-                                Remove
-
-                            </button>
-
-                        </div>
+                        </button>
 
                     </div>
 
                 </div>
 
-            `;
+            </div>
 
-        }).join("");
+        `).join("");
 
     }
 
 
     /* =========================
-       CHANGE QUANTITY
+       QUANTITY
     ========================= */
 
     window.changeQuantity = function (
@@ -245,8 +213,9 @@
     ) {
 
         const item = cart.find(
-            product =>
-                String(product.id) === String(productId)
+            item =>
+                String(item.id) ===
+                String(productId)
         );
 
 
@@ -259,8 +228,8 @@
         if (item.quantity <= 0) {
 
             cart = cart.filter(
-                product =>
-                    String(product.id) !==
+                item =>
+                    String(item.id) !==
                     String(productId)
             );
 
@@ -268,12 +237,11 @@
 
 
         updateCart();
-
     };
 
 
     /* =========================
-       REMOVE PRODUCT
+       REMOVE
     ========================= */
 
     window.removeFromCart = function (
@@ -288,7 +256,6 @@
 
 
         updateCart();
-
     };
 
 
@@ -308,173 +275,124 @@
         }
 
 
-        if (checkoutOverlay) {
-
-            checkoutOverlay.classList.add(
-                "active"
-            );
-
-        }
+        checkoutOverlay?.classList.add(
+            "active"
+        );
 
     };
 
 
     window.closeCheckout = function () {
 
-        if (checkoutOverlay) {
-
-            checkoutOverlay.classList.remove(
-                "active"
-            );
-
-        }
+        checkoutOverlay?.classList.remove(
+            "active"
+        );
 
     };
 
 
     /* =========================
-       PLACE ORDER → WHATSAPP
+       WHATSAPP ORDER
     ========================= */
 
-    if (checkoutForm) {
+    checkoutForm?.addEventListener(
+        "submit",
+        function (event) {
 
-        checkoutForm.addEventListener(
-            "submit",
-            function (event) {
-
-                event.preventDefault();
+            event.preventDefault();
 
 
-                if (cart.length === 0) {
+            if (cart.length === 0) {
 
-                    alert(
-                        "Your cart is empty 💗"
-                    );
-
-                    return;
-                }
-
-
-                const name =
-                    document
-                        .getElementById("customerName")
-                        .value
-                        .trim();
-
-
-                const phone =
-                    document
-                        .getElementById("customerPhone")
-                        .value
-                        .trim();
-
-
-                const address =
-                    document
-                        .getElementById("customerAddress")
-                        .value
-                        .trim();
-
-
-                const payment =
-                    document
-                        .getElementById("paymentMethod")
-                        .value;
-
-
-                if (
-                    !name ||
-                    !phone ||
-                    !address
-                ) {
-
-                    alert(
-                        "Please complete all required details 💗"
-                    );
-
-                    return;
-
-                }
-
-
-                /* =====================
-                   CALCULATE TOTAL
-                ===================== */
-
-                const total = cart.reduce(
-                    (sum, item) => {
-
-                        return sum +
-                            (
-                                item.price *
-                                item.quantity
-                            );
-
-                    },
-                    0
+                alert(
+                    "Your cart is empty 💗"
                 );
 
-
-                /* =====================
-                   ORDER ID
-                ===================== */
-
-                const orderId =
-                    "MZ-" +
-                    Date.now()
-                        .toString()
-                        .slice(-6);
+                return;
+            }
 
 
-                /* =====================
-                   PRODUCT LIST
-                ===================== */
-
-                let productMessage = "";
-
-
-                cart.forEach(item => {
-
-                    productMessage +=
-                        `• ${item.name} x${item.quantity} — PKR ${(
-                            item.price *
-                            item.quantity
-                        ).toLocaleString()}\n`;
-
-                });
+            const name =
+                document
+                    .getElementById("customerName")
+                    .value.trim();
 
 
-                /* =====================
-                   PAYMENT NAME
-                ===================== */
-
-                let paymentName =
-                    "Cash on Delivery";
+            const phone =
+                document
+                    .getElementById("customerPhone")
+                    .value.trim();
 
 
-                if (payment === "bank") {
-
-                    paymentName =
-                        "Bank Transfer";
-
-                }
+            const address =
+                document
+                    .getElementById("customerAddress")
+                    .value.trim();
 
 
-                if (payment === "online") {
-
-                    paymentName =
-                        "Online Payment";
-
-                }
+            const payment =
+                document
+                    .getElementById("paymentMethod")
+                    .value;
 
 
-                /* =====================
-                   WHATSAPP MESSAGE
-                ===================== */
+            if (!name || !phone || !address) {
 
-                const message =
+                alert(
+                    "Please complete all required details 💗"
+                );
 
-                    `🌸 *NEW ORDER — M.Z ESSENTIALS* 🌸
+                return;
+            }
+
+
+            const total = cart.reduce(
+                (sum, item) =>
+                    sum +
+                    item.price *
+                    item.quantity,
+                0
+            );
+
+
+            const orderId =
+                "MZ-" +
+                Date.now()
+                    .toString()
+                    .slice(-6);
+
+
+            let productsText = "";
+
+
+            cart.forEach(item => {
+
+                productsText +=
+                    `• ${item.name} x${item.quantity} — PKR ${(
+                        item.price *
+                        item.quantity
+                    ).toLocaleString()}\n`;
+
+            });
+
+
+            let paymentText =
+                "Cash on Delivery";
+
+
+            if (payment === "bank") {
+                paymentText = "Bank Transfer";
+            }
+
+
+            if (payment === "online") {
+                paymentText = "Online Payment";
+            }
+
+
+            const message =
+
+`🌸 *NEW ORDER — M.Z ESSENTIALS* 🌸
 
 Order ID: ${orderId}
 
@@ -488,59 +406,43 @@ Address:
 ${address}
 
 💳 Payment:
-${paymentName}
+${paymentText}
 
 🛍️ *Order Details*
 
-${productMessage}
+${productsText}
 
 💰 *Total: PKR ${total.toLocaleString()}*
 
 Thank you for shopping with M.Z Essentials 💗`;
 
 
-                /* =====================
-                   WHATSAPP NUMBER
-                ===================== */
-
-                const whatsappNumber =
-                    "923425522820";
+            const whatsappNumber =
+                "923425522820";
 
 
-                const whatsappURL =
-                    `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-                        message
-                    )}`;
+            const whatsappURL =
+                `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
 
-                /* =====================
-                   OPEN WHATSAPP
-                ===================== */
-
-                window.open(
-                    whatsappURL,
-                    "_blank"
-                );
+            window.open(
+                whatsappURL,
+                "_blank"
+            );
 
 
-                /* =====================
-                   CLEAR CART
-                ===================== */
+            cart = [];
 
-                cart = [];
+            updateCart();
 
-                updateCart();
+            checkoutForm.reset();
 
-                checkoutForm.reset();
+            closeCheckout();
 
-                closeCheckout();
+            closeCartPanel();
 
-                closeCartPanel();
-
-            }
-        );
-
-    }
+        }
+    );
 
 
     /* =========================
@@ -551,8 +453,11 @@ Thank you for shopping with M.Z Essentials 💗`;
         category
     ) {
 
+        if (!productGrid) return;
+
+
         const products =
-            document.querySelectorAll(
+            productGrid.querySelectorAll(
                 ".product-card"
             );
 
@@ -560,11 +465,10 @@ Thank you for shopping with M.Z Essentials 💗`;
         products.forEach(product => {
 
             const productCategory =
-                product.dataset.category;
+                product.dataset.category || "";
 
 
             if (
-                productCategory &&
                 productCategory.toLowerCase() ===
                 category.toLowerCase()
             ) {
@@ -582,37 +486,91 @@ Thank you for shopping with M.Z Essentials 💗`;
         });
 
 
-        const productsSection =
-            document.getElementById(
-                "products"
+        /* Change heading */
+
+        const heading =
+            document.querySelector(
+                ".product-heading h2"
             );
 
 
-        if (productsSection) {
+        if (heading) {
 
-            productsSection.scrollIntoView({
-                behavior: "smooth"
-            });
+            heading.textContent =
+                `${category} Collection`;
 
         }
+
+
+        const eyebrow =
+            document.querySelector(
+                ".product-heading .eyebrow"
+            );
+
+
+        if (eyebrow) {
+
+            eyebrow.textContent =
+                `SHOP ${category.toUpperCase()}`;
+
+        }
+
+
+        /* Scroll to products */
+
+        document
+            .getElementById("products")
+            ?.scrollIntoView({
+                behavior: "smooth"
+            });
 
     };
 
 
     /* =========================
-       SHOW ALL PRODUCTS
+       VIEW ALL
     ========================= */
 
     window.showAllProducts = function () {
 
         document
-            .querySelectorAll(".product-card")
+            .querySelectorAll(
+                ".product-card"
+            )
             .forEach(product => {
 
                 product.style.display =
                     "block";
 
             });
+
+
+        const heading =
+            document.querySelector(
+                ".product-heading h2"
+            );
+
+
+        if (heading) {
+
+            heading.textContent =
+                "Customer Favorites";
+
+        }
+
+
+        const eyebrow =
+            document.querySelector(
+                ".product-heading .eyebrow"
+            );
+
+
+        if (eyebrow) {
+
+            eyebrow.textContent =
+                "OUR COLLECTION";
+
+        }
 
     };
 
@@ -645,7 +603,6 @@ Thank you for shopping with M.Z Essentials 💗`;
             input.focus();
 
             return;
-
         }
 
 
@@ -661,7 +618,6 @@ Thank you for shopping with M.Z Essentials 💗`;
             input.focus();
 
             return;
-
         }
 
 
@@ -673,83 +629,6 @@ Thank you for shopping with M.Z Essentials 💗`;
         input.value = "";
 
     };
-
-
-    /* =========================
-       WHATSAPP BUTTON
-    ========================= */
-
-    const whatsappButton =
-        document.getElementById(
-            "whatsappButton"
-        );
-
-
-    if (whatsappButton) {
-
-        whatsappButton.href =
-            "https://wa.me/923425522820";
-
-        whatsappButton.target =
-            "_blank";
-
-        whatsappButton.rel =
-            "noopener noreferrer";
-
-    }
-
-
-    /* =========================
-       SMOOTH NAVIGATION
-    ========================= */
-
-    document
-        .querySelectorAll(
-            'a[href^="#"]'
-        )
-        .forEach(link => {
-
-            link.addEventListener(
-                "click",
-                function (event) {
-
-                    const targetId =
-                        this.getAttribute(
-                            "href"
-                        );
-
-
-                    if (
-                        !targetId ||
-                        targetId === "#"
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    const target =
-                        document.querySelector(
-                            targetId
-                        );
-
-
-                    if (target) {
-
-                        event.preventDefault();
-
-
-                        target.scrollIntoView({
-                            behavior: "smooth"
-                        });
-
-                    }
-
-                }
-            );
-
-        });
 
 
     /* =========================
@@ -767,147 +646,134 @@ Thank you for shopping with M.Z Essentials 💗`;
 
 
         if (
+            !productGrid ||
             savedProducts.length === 0
         ) {
 
             return;
-
         }
 
 
-        const productGrid =
-            document.getElementById(
-                "productGrid"
-            );
+        savedProducts.forEach(product => {
 
-
-        if (!productGrid) return;
-
-
-        savedProducts.forEach(
-            product => {
-
-                const existingProduct =
-                    productGrid.querySelector(
-                        `.product-card[data-admin-id="${product.id}"]`
-                    );
-
-
-                if (existingProduct) {
-
-                    return;
-
-                }
-
-
-                const article =
-                    document.createElement(
-                        "article"
-                    );
-
-
-                article.className =
-                    "product-card";
-
-
-                article.dataset.category =
-                    product.category;
-
-
-                article.dataset.id =
-                    `admin-${product.id}`;
-
-
-                article.dataset.adminId =
-                    product.id;
-
-
-                article.dataset.name =
-                    product.name;
-
-
-                article.dataset.price =
-                    product.price;
-
-
-                article.innerHTML = `
-
-                    <div class="product-image">
-
-                        ${
-                            product.image
-                            ?
-                            `<img
-                                src="${product.image}"
-                                alt="${product.name}"
-                                style="
-                                    width:100%;
-                                    height:100%;
-                                    object-fit:cover;
-                                "
-                            >`
-                            :
-                            `<div class="product-placeholder">
-                                ✿
-                            </div>`
-                        }
-
-                    </div>
-
-
-                    <div class="product-details">
-
-                        <p class="product-category">
-                            ${product.category}
-                        </p>
-
-
-                        <h3>
-                            ${product.name}
-                        </h3>
-
-
-                        <p class="product-description">
-                            ${product.description}
-                        </p>
-
-
-                        <div class="product-bottom">
-
-                            <strong>
-                                PKR ${Number(
-                                    product.price
-                                ).toLocaleString()}
-                            </strong>
-
-
-                            <button
-                                class="add-button"
-                                onclick="addToCart('admin-${product.id}')">
-
-                                Add +
-
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                `;
-
-
-                productGrid.appendChild(
-                    article
+            const exists =
+                productGrid.querySelector(
+                    `[data-admin-id="${product.id}"]`
                 );
 
-            }
-        );
+
+            if (exists) return;
+
+
+            const article =
+                document.createElement(
+                    "article"
+                );
+
+
+            article.className =
+                "product-card";
+
+
+            article.dataset.id =
+                `admin-${product.id}`;
+
+
+            article.dataset.adminId =
+                product.id;
+
+
+            article.dataset.name =
+                product.name;
+
+
+            article.dataset.price =
+                product.price;
+
+
+            article.dataset.category =
+                product.category;
+
+
+            article.innerHTML = `
+
+                <div class="product-image">
+
+                    ${
+                        product.image
+                        ?
+                        `<img
+                            src="${product.image}"
+                            alt="${product.name}"
+                            style="
+                                width:100%;
+                                height:100%;
+                                object-fit:cover;
+                            "
+                        >`
+                        :
+                        `
+                        <div class="product-placeholder">
+                            ✿
+                        </div>
+                        `
+                    }
+
+                </div>
+
+
+                <div class="product-details">
+
+                    <p class="product-category">
+                        ${product.category}
+                    </p>
+
+
+                    <h3>
+                        ${product.name}
+                    </h3>
+
+
+                    <p class="product-description">
+                        ${product.description}
+                    </p>
+
+
+                    <div class="product-bottom">
+
+                        <strong>
+                            PKR ${Number(
+                                product.price
+                            ).toLocaleString()}
+                        </strong>
+
+
+                        <button
+                            class="add-button"
+                            onclick="addToCart('admin-${product.id}')">
+
+                            Add +
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            productGrid.appendChild(
+                article
+            );
+
+        });
 
     }
 
 
     /* =========================
-       INITIALIZE
+       START
     ========================= */
 
     loadAdminProducts();
